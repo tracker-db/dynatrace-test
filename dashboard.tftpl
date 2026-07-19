@@ -1,0 +1,90 @@
+{
+    "dashboardMetadata": {
+        "name": "vault1",
+        "shared": true
+    },
+    "tiles": [
+        {
+            "name": "Synthetic Availability (Uptime %)",
+            "tileType": "DATA_EXPLORER",
+            "configured": true,
+            "bounds": {
+                "top": 0,
+                "left": 0,
+                "width": 456,
+                "height": 304
+            },
+            "queries": [
+                {
+                    "id": "A",
+                    "metric": "builtin:synthetic.http.availability",
+                    "spaceAggregation": "AVG",
+                    "timeAggregation": "DEFAULT",
+                    "splitBy": [],
+                    "filterBy": {
+                        "filterOperator": "AND",
+                        "nestedFilters": [
+                            {
+                                "filter": "entityId",
+                                "filterType": "ENTITY",
+                                "filterOperator": "EQUALS",
+                                "entityName": "${vault_monitor_id}"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "visualConfig": {
+                "type": "SINGLE_VALUE",
+                "globalOutliers": true,
+                "hideLegend": true,
+                "singleValue": {
+                    "showTrend": true,
+                    "showSparkLine": true
+                }
+            },
+            "queriesSettings": {
+                "resolution": ""
+            }
+        },
+        {
+            "name": "Latency Trend (Avg Response Time, 1 Hour)",
+            "tileType": "DATA_EXPLORER",
+            "configured": true,
+            "bounds": {
+                "top": 0,
+                "left": 456,
+                "width": 760,
+                "height": 304
+            },
+            "queries": [
+                {
+                    "id": "A",
+                    "metric": "builtin:synthetic.http.response.time",
+                    "spaceAggregation": "AVG",
+                    "timeAggregation": "DEFAULT",
+                    "splitBy": [],
+                    "filterBy": {
+                        "filterOperator": "AND",
+                        "nestedFilters": [
+                            {
+                                "filter": "entityId",
+                                "filterType": "ENTITY",
+                                "filterOperator": "EQUALS",
+                                "entityName": "${vault_monitor_id}"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "visualConfig": {
+                "type": "GRAPH_CHART",
+                "globalOutliers": true,
+                "hideLegend": false
+            },
+            "queriesSettings": {
+                "resolution": ""
+            }
+        }
+    ]
+}
