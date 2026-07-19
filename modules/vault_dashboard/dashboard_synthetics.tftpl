@@ -1,0 +1,133 @@
+{
+  "version": 13,
+  "dashboardMetadata": {
+    "name": "${dashboard_name}",
+    "shared": true
+  },
+  "variables": [
+    {
+      "key": "tenant",
+      "type": "csv",
+      "input": "nextresearch,auto-deploy,advocatediablo",
+      "multiple": false,
+      "version": 2,
+      "visible": true
+    }
+  ],
+  "tiles": {
+    "100": {
+      "type": "markdown",
+      "title": "",
+      "content": "### 🌐 External Availability & Synthetic Checks (Currently viewing: **$tenant**)"
+    },
+    "0": {
+      "type": "data",
+      "title": "Seal Status (Unsealed)",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:seal_status\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": true,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "1": {
+      "type": "data",
+      "title": "Endpoint Availability",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:availability\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": true,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "2": {
+      "type": "data",
+      "title": "Auth & Read Capability",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": true,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "3": {
+      "type": "data",
+      "title": "Latency Trend (Endpoint Availability)",
+      "query": "timeseries avg(dt.synthetic.http.duration), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:availability\\\")\")))}",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "thresholds": [],
+        "chartSettings": {
+          "gapPolicy": "connect",
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "categoryOverrides": {},
+          "fieldMapping": {
+            "timestamp": "timeframe",
+            "leftAxisValues": [
+              "avg(dt.synthetic.http.duration)"
+            ],
+            "leftAxisDimensions": [],
+            "fields": [],
+            "values": []
+          }
+        }
+      }
+    },
+    "4": {
+      "type": "data",
+      "title": "Global Fleet: Seal Status (All Environments)",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), by:{dt.entity.http_check}, filter:{in(dt.entity.http_check, classicEntitySelector(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"check_type:seal_status\\\")\"))}",
+      "visualization": "honeycomb",
+      "visualizationSettings": {
+        "thresholds": [
+          {
+            "value": 100,
+            "color": "#7dc540" 
+          },
+          {
+            "value": 0,
+            "color": "#dc172a" 
+          }
+        ],
+        "honeycomb": {
+          "shape": "hexagon",
+          "legend": "hidden",
+          "label": "dimension"
+        }
+      }
+    }
+  },
+  "layouts": {
+    "100": { "x": 0, "y": 0, "w": 24, "h": 2 },
+    "0": { "x": 0, "y": 2, "w": 8, "h": 6 },
+    "1": { "x": 8, "y": 2, "w": 8, "h": 6 },
+    "2": { "x": 16, "y": 2, "w": 8, "h": 6 },
+    "3": { "x": 0, "y": 8, "w": 12, "h": 6 },
+    "4": { "x": 12, "y": 8, "w": 12, "h": 6 }
+  }
+}

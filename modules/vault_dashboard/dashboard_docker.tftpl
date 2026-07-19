@@ -1,0 +1,89 @@
+{
+  "version": 13,
+  "dashboardMetadata": {
+    "name": "${dashboard_name}",
+    "shared": true
+  },
+  "variables": [
+    {
+      "key": "tenant",
+      "type": "csv",
+      "input": "nextresearch",
+      "multiple": false,
+      "version": 2,
+      "visible": true
+    }
+  ],
+  "tiles": {
+    "101": {
+      "type": "markdown",
+      "title": "",
+      "content": "### 🖥️ Internal Docker Infrastructure (Currently viewing: **$tenant**)"
+    },
+    "5": {
+      "type": "data",
+      "title": "Host CPU Trend",
+      "query": "timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "6": {
+      "type": "data",
+      "title": "Host Memory Trend",
+      "query": "timeseries avg(dt.host.memory.used), by:{dt.entity.host}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "7": {
+      "type": "data",
+      "title": "Network Traffic (Inbound)",
+      "query": "timeseries avg(builtin:host.net.nic.bytesRx), by:{dt.entity.host}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "8": {
+      "type": "data",
+      "title": "Network Traffic (Outbound)",
+      "query": "timeseries avg(builtin:host.net.nic.bytesTx), by:{dt.entity.host}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "9": {
+      "type": "data",
+      "title": "Host Disk Usage",
+      "query": "timeseries avg(dt.host.disk.used), by:{dt.entity.disk}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "102": {
+      "type": "markdown",
+      "title": "",
+      "content": "### 📜 Vault Application Logs"
+    },
+    "10": {
+      "type": "data",
+      "title": "Live Vault Logs (All)",
+      "query": "fetch logs | filter matchesPhrase(content, \"vault\") or matchesValue(dt.process.name, \"Go\") | fields timestamp, log.source, dt.process.name, content | sort timestamp desc | limit 50",
+      "visualization": "table",
+      "visualizationSettings": {}
+    },
+    "11": {
+      "type": "data",
+      "title": "🚨 Vault Errors & Warnings",
+      "query": "fetch logs | filter matchesPhrase(content, \"vault\") and (matchesPhrase(content, \"error\") or matchesPhrase(content, \"warn\")) | fields timestamp, log.source, dt.process.name, content | sort timestamp desc | limit 50",
+      "visualization": "table",
+      "visualizationSettings": {}
+    }
+  },
+  "layouts": {
+    "101": { "x": 0, "y": 0, "w": 24, "h": 2 },
+    "5": { "x": 0, "y": 2, "w": 12, "h": 6 },
+    "6": { "x": 12, "y": 2, "w": 12, "h": 6 },
+    "7": { "x": 0, "y": 8, "w": 8, "h": 6 },
+    "8": { "x": 8, "y": 8, "w": 8, "h": 6 },
+    "9": { "x": 16, "y": 8, "w": 8, "h": 6 },
+    "102": { "x": 0, "y": 14, "w": 24, "h": 2 },
+    "10": { "x": 0, "y": 16, "w": 12, "h": 8 },
+    "11": { "x": 12, "y": 16, "w": 12, "h": 8 }
+  }
+}
