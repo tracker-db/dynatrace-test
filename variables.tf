@@ -1,6 +1,5 @@
-# variables.tf
 variable "dynatrace_env_url" {
-  description = "https://wkf10640.apps.dynatrace.com"
+  description = "dynatrace_env_url of our testing"
   type        = string
 }
 
@@ -32,4 +31,20 @@ variable "vault_secret_path" {
   description = "Vault secret path to validate"
   type        = string
   default     = "lab/test"
+}
+
+variable "automation_client_id" {
+  description = "OAuth client ID for Dynatrace automation/document API"
+  type        = string
+}
+
+variable "automation_client_secret" {
+  description = "OAuth client secret for Dynatrace automation/document API"
+  type        = string
+  sensitive   = true
+}
+
+variable "automation_env_url" {
+  description = "dynatrace_env_url of our automation/document API"
+  type        = string
 }
