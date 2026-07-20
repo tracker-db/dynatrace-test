@@ -18,7 +18,7 @@
     "100": {
       "type": "markdown",
       "title": "",
-      "content": "### 🌐 External Availability & Synthetic Checks (Currently viewing: **$tenant**)"
+      "content": "### \ud83c\udf10 External Availability & Synthetic Checks (Currently viewing: **$tenant**)"
     },
     "0": {
       "type": "data",
@@ -107,11 +107,11 @@
         "thresholds": [
           {
             "value": 100,
-            "color": "#7dc540" 
+            "color": "#7dc540"
           },
           {
             "value": 0,
-            "color": "#dc172a" 
+            "color": "#dc172a"
           }
         ],
         "honeycomb": {
@@ -120,14 +120,81 @@
           "label": "dimension"
         }
       }
+    },
+    "101": {
+      "type": "markdown",
+      "title": "",
+      "content": "### \ud83d\udee0\ufe0f Synthetic Diagnostics & Troubleshooting"
+    },
+    "5": {
+      "type": "data",
+      "title": "\ud83d\udea8 Recent Synthetic Outages & Errors",
+      "query": "fetch events | filter in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"env:\", $tenant, \"\\\")\"))) | fields timestamp, event.name, event.status, event.description | sort timestamp desc | limit 20",
+      "visualization": "table",
+      "visualizationSettings": {}
+    },
+    "6": {
+      "type": "data",
+      "title": "Authentication vs. Read Latency (Step Breakdown)",
+      "query": "timeseries avg(dt.synthetic.http.duration), by:{dt.entity.http_check_step}, filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
     }
   },
   "layouts": {
-    "100": { "x": 0, "y": 0, "w": 24, "h": 2 },
-    "0": { "x": 0, "y": 2, "w": 8, "h": 6 },
-    "1": { "x": 8, "y": 2, "w": 8, "h": 6 },
-    "2": { "x": 16, "y": 2, "w": 8, "h": 6 },
-    "3": { "x": 0, "y": 8, "w": 12, "h": 6 },
-    "4": { "x": 12, "y": 8, "w": 12, "h": 6 }
+    "100": {
+      "x": 0,
+      "y": 0,
+      "w": 24,
+      "h": 2
+    },
+    "0": {
+      "x": 0,
+      "y": 2,
+      "w": 8,
+      "h": 6
+    },
+    "1": {
+      "x": 8,
+      "y": 2,
+      "w": 8,
+      "h": 6
+    },
+    "2": {
+      "x": 16,
+      "y": 2,
+      "w": 8,
+      "h": 6
+    },
+    "3": {
+      "x": 0,
+      "y": 8,
+      "w": 12,
+      "h": 6
+    },
+    "4": {
+      "x": 12,
+      "y": 8,
+      "w": 12,
+      "h": 6
+    },
+    "101": {
+      "x": 0,
+      "y": 14,
+      "w": 24,
+      "h": 2
+    },
+    "5": {
+      "x": 0,
+      "y": 16,
+      "w": 12,
+      "h": 8
+    },
+    "6": {
+      "x": 12,
+      "y": 16,
+      "w": 12,
+      "h": 8
+    }
   }
 }

@@ -18,47 +18,47 @@
     "101": {
       "type": "markdown",
       "title": "",
-      "content": "### 🖥️ Internal Kubernetes Infrastructure (Currently viewing: **$tenant**)"
+      "content": "### \ud83d\udda5\ufe0f Internal Kubernetes Infrastructure (Currently viewing: **$tenant**)"
     },
     "5": {
       "type": "data",
       "title": "Node CPU Trend",
-      "query": "timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}",
+      "query": "timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "6": {
       "type": "data",
       "title": "Node Memory Trend",
-      "query": "timeseries avg(dt.host.memory.used), by:{dt.entity.host}",
+      "query": "timeseries avg(dt.host.memory.used), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "7": {
       "type": "data",
       "title": "Network Traffic (Inbound)",
-      "query": "timeseries sum(dt.host.net.nic.bytes_rx), by:{dt.entity.host}",
+      "query": "timeseries sum(dt.host.net.nic.bytes_rx), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "8": {
       "type": "data",
       "title": "Network Traffic (Outbound)",
-      "query": "timeseries sum(dt.host.net.nic.bytes_tx), by:{dt.entity.host}",
+      "query": "timeseries sum(dt.host.net.nic.bytes_tx), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "9": {
       "type": "data",
       "title": "Node Disk Usage",
-      "query": "timeseries avg(dt.host.disk.used), by:{dt.entity.disk}",
+      "query": "timeseries avg(dt.host.disk.used), by:{dt.entity.disk}, filter:{in(dt.entity.disk, classicEntitySelector(concat(\"type(DISK),tag(\", $tenant, \")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "102": {
       "type": "markdown",
       "title": "",
-      "content": "### 📜 Vault Application Logs"
+      "content": "### \ud83d\udcdc Vault Application Logs"
     },
     "10": {
       "type": "data",
@@ -69,21 +69,66 @@
     },
     "11": {
       "type": "data",
-      "title": "🚨 Vault Errors & Warnings",
+      "title": "\ud83d\udea8 Vault Errors & Warnings",
       "query": "fetch logs | filter matchesPhrase(content, \"vault\") and (matchesPhrase(content, \"error\") or matchesPhrase(content, \"warn\")) | fields timestamp, log.source, dt.process.name, content | sort timestamp desc | limit 50",
       "visualization": "table",
       "visualizationSettings": {}
     }
   },
   "layouts": {
-    "101": { "x": 0, "y": 0, "w": 24, "h": 2 },
-    "5": { "x": 0, "y": 2, "w": 12, "h": 6 },
-    "6": { "x": 12, "y": 2, "w": 12, "h": 6 },
-    "7": { "x": 0, "y": 8, "w": 8, "h": 6 },
-    "8": { "x": 8, "y": 8, "w": 8, "h": 6 },
-    "9": { "x": 16, "y": 8, "w": 8, "h": 6 },
-    "102": { "x": 0, "y": 14, "w": 24, "h": 2 },
-    "10": { "x": 0, "y": 16, "w": 12, "h": 8 },
-    "11": { "x": 12, "y": 16, "w": 12, "h": 8 }
+    "101": {
+      "x": 0,
+      "y": 0,
+      "w": 24,
+      "h": 2
+    },
+    "5": {
+      "x": 0,
+      "y": 2,
+      "w": 12,
+      "h": 6
+    },
+    "6": {
+      "x": 12,
+      "y": 2,
+      "w": 12,
+      "h": 6
+    },
+    "7": {
+      "x": 0,
+      "y": 8,
+      "w": 8,
+      "h": 6
+    },
+    "8": {
+      "x": 8,
+      "y": 8,
+      "w": 8,
+      "h": 6
+    },
+    "9": {
+      "x": 16,
+      "y": 8,
+      "w": 8,
+      "h": 6
+    },
+    "102": {
+      "x": 0,
+      "y": 14,
+      "w": 24,
+      "h": 2
+    },
+    "10": {
+      "x": 0,
+      "y": 16,
+      "w": 12,
+      "h": 8
+    },
+    "11": {
+      "x": 12,
+      "y": 16,
+      "w": 12,
+      "h": 8
+    }
   }
 }

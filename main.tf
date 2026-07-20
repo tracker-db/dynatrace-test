@@ -27,7 +27,7 @@ locals {
 resource "dynatrace_http_monitor" "vault_check" {
   for_each  = local.environments
   name      = "Vault-Availability-Check (${each.key})"
-  enabled   = false
+  enabled   = true
   frequency = 5
   locations = ["SYNTHETIC_LOCATION-0000000000000046"]
 
@@ -61,7 +61,7 @@ resource "dynatrace_http_monitor" "vault_check" {
 resource "dynatrace_http_monitor" "vault_seal_check" {
   for_each  = local.environments
   name      = "Vault-Seal-Status-Check (${each.key})"
-  enabled   = false
+  enabled   = true
   frequency = 5
   locations = ["SYNTHETIC_LOCATION-0000000000000046"]
 
@@ -103,7 +103,7 @@ resource "dynatrace_http_monitor" "vault_seal_check" {
 resource "dynatrace_http_monitor" "vault_auth_check" {
   for_each  = local.environments
   name      = "Vault-Auth-Check (${each.key})"
-  enabled   = false
+  enabled   = true
   frequency = 5
   locations = ["SYNTHETIC_LOCATION-0000000000000046"]
 
