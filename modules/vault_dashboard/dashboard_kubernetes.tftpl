@@ -37,14 +37,14 @@
     "7": {
       "type": "data",
       "title": "Network Traffic (Inbound)",
-      "query": "timeseries avg(builtin:host.net.nic.bytesRx), by:{dt.entity.host}",
+      "query": "timeseries sum(dt.host.net.nic.bytes_rx), by:{dt.entity.host}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
     "8": {
       "type": "data",
       "title": "Network Traffic (Outbound)",
-      "query": "timeseries avg(builtin:host.net.nic.bytesTx), by:{dt.entity.host}",
+      "query": "timeseries sum(dt.host.net.nic.bytes_tx), by:{dt.entity.host}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },

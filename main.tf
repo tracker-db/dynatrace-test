@@ -8,6 +8,7 @@ provider "dynatrace" {
   automation_env_url       = data.vault_generic_secret.dt.data["automation_env_url"]
   automation_client_id     = data.vault_generic_secret.dt.data["client_id"]
   automation_client_secret = data.vault_generic_secret.dt.data["client_secret"]
+  iam_account_id           = data.vault_generic_secret.dt.data["account_id"]
 }
 
 locals {
@@ -60,7 +61,7 @@ resource "dynatrace_http_monitor" "vault_check" {
 resource "dynatrace_http_monitor" "vault_seal_check" {
   for_each  = local.environments
   name      = "Vault-Seal-Status-Check (${each.key})"
-  enabled   = false
+  enabled   = true
   frequency = 5
   locations = ["SYNTHETIC_LOCATION-0000000000000046"]
 
@@ -102,7 +103,7 @@ resource "dynatrace_http_monitor" "vault_seal_check" {
 resource "dynatrace_http_monitor" "vault_auth_check" {
   for_each  = local.environments
   name      = "Vault-Auth-Check (${each.key})"
-  enabled   = false
+  enabled   = true
   frequency = 5
   locations = ["SYNTHETIC_LOCATION-0000000000000046"]
 
@@ -171,4 +172,41 @@ module "vault_dashboard" {
   env            = each.key
   service_name   = "vault"
   dashboard_type = each.value
+}
+
+
+resource "vault_generic_endpoint" "testuser" {
+  path                 = "auth/userpass/users/testuser"
+  ignore_absent_fields = true
+  data_json = <<EOT
+{
+  "policies": ["default"],
+  "password": "testpass"
+}
+EOT
+}
+
+resource "dynatrace_iam_group" "vault_dashboard_viewers" {
+  name = "Vault Dashboard Viewers"
+}
+
+resource "dynatrace_iam_policy" "grail_metrics_read" {
+  name            = "Grail Metrics Read Access (Vault Dashboards)"
+  account         = data.vault_generic_secret.dt.data["account_id"]
+  statement_query = "ALLOW storage:metrics:read, storage:buckets:read, storage:entities:read;"
+}
+
+resource "dynatrace_iam_policy_bindings" "grail_metrics_read_binding" {
+  group       = dynatrace_iam_group.vault_dashboard_viewers.id
+  account     = data.vault_generic_secret.dt.data["account_id"]
+  policies    = [dynatrace_iam_policy.grail_metrics_read.id]
+}
+
+resource "dynatrace_iam_user" "ejbest" {
+  email  = "ejbest@gmail.com"
+  groups = [
+    dynatrace_iam_group.vault_dashboard_viewers.id,
+    "1947a3cd-206e-4024-9798-608d14d7679f",
+    "041f169b-72db-4149-9cc0-f91325cf6634"
+  ]
 }
