@@ -1,4 +1,7 @@
 terraform {
+  backend "local" {
+    path = "state/terraform.tfstate"
+  }
   required_providers {
     dynatrace = {
       source  = "dynatrace-oss/dynatrace"

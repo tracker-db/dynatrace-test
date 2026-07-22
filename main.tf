@@ -88,7 +88,7 @@ resource "dynatrace_http_monitor" "vault_seal_check" {
       url         = "${each.value}v1/sys/health"
       method      = "GET"
       description = "Check Vault Seal Status for ${each.key}"
-      
+
       validation {
         rule {
           type          = "httpStatusesList"
@@ -130,10 +130,19 @@ resource "dynatrace_http_monitor" "vault_auth_check" {
       url         = "${each.value}v1/auth/approle/login"
       method      = "POST"
       description = "Step 1: Authenticate via AppRole"
-      body        = "{\"role_id\":\"placeholder_role_id\",\"secret_id\":\"placeholder_secret_id\"}"
-      
+      body        = "{\"role_id\":\"dynatrace-synthetic-role-id\",\"secret_id\":\"dynatrace-synthetic-secret-id\"}"
+
+      configuration {
+        accept_any_certificate = true
+        headers {
+          header {
+            name  = "Content-Type"
+            value = "application/json"
+          }
+        }
+      }
+
       post_processing = <<-EOT
-        var response = api.getContext().response;
         if (response.getStatusCode() === 200) {
             var body = JSON.parse(response.getResponseBody());
             api.setValue("client_token", body.auth.client_token);
@@ -142,11 +151,12 @@ resource "dynatrace_http_monitor" "vault_auth_check" {
     }
 
     request {
-      url         = "${each.value}v1/secret/data/monitoring"
+      url         = "${each.value}v1/secret/data/dynatrace/synthetic_test"
       method      = "GET"
       description = "Step 2: Read Secret"
-      
+
       configuration {
+        accept_any_certificate = true
         headers {
           header {
             name  = "X-Vault-Token"
@@ -154,7 +164,7 @@ resource "dynatrace_http_monitor" "vault_auth_check" {
           }
         }
       }
-      
+
       validation {
         rule {
           type          = "httpStatusesList"
@@ -187,13 +197,13 @@ resource "dynatrace_iam_policy" "grail_metrics_read" {
 }
 
 resource "dynatrace_iam_policy_bindings" "grail_metrics_read_binding" {
-  group       = dynatrace_iam_group.vault_dashboard_viewers.id
-  account     = data.vault_generic_secret.dt.data["account_id"]
-  policies    = [dynatrace_iam_policy.grail_metrics_read.id]
+  group    = dynatrace_iam_group.vault_dashboard_viewers.id
+  account  = data.vault_generic_secret.dt.data["account_id"]
+  policies = [dynatrace_iam_policy.grail_metrics_read.id]
 }
 
 resource "dynatrace_iam_user" "ejbest" {
-  email  = "ejbest@gmail.com"
+  email = "ejbest@gmail.com"
   groups = [
     dynatrace_iam_group.vault_dashboard_viewers.id,
     "1947a3cd-206e-4024-9798-608d14d7679f",

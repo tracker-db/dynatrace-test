@@ -126,17 +126,10 @@
       "title": "",
       "content": "### \ud83d\udee0\ufe0f Synthetic Diagnostics & Troubleshooting"
     },
-    "5": {
-      "type": "data",
-      "title": "\ud83d\udea8 Recent Synthetic Outages & Errors",
-      "query": "fetch events | filter in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"env:\", $tenant, \"\\\")\"))) | fields timestamp, event.name, event.status, event.description | sort timestamp desc | limit 20",
-      "visualization": "table",
-      "visualizationSettings": {}
-    },
     "6": {
       "type": "data",
       "title": "Authentication vs. Read Latency (Step Breakdown)",
-      "query": "timeseries avg(dt.synthetic.http.duration), by:{dt.entity.http_check_step}, filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
+      "query": "timeseries avg(dt.synthetic.http.request.duration), by:{dt.synthetic.step.id}, filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:vault\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
       "visualization": "lineChart",
       "visualizationSettings": {}
     }
@@ -152,48 +145,42 @@
       "x": 0,
       "y": 2,
       "w": 8,
-      "h": 6
+      "h": 4
     },
     "1": {
       "x": 8,
       "y": 2,
       "w": 8,
-      "h": 6
+      "h": 4
     },
     "2": {
       "x": 16,
       "y": 2,
       "w": 8,
-      "h": 6
+      "h": 4
     },
     "3": {
       "x": 0,
-      "y": 8,
+      "y": 6,
       "w": 12,
-      "h": 6
+      "h": 4
     },
     "4": {
       "x": 12,
-      "y": 8,
+      "y": 6,
       "w": 12,
-      "h": 6
+      "h": 4
     },
     "101": {
       "x": 0,
-      "y": 14,
+      "y": 10,
       "w": 24,
       "h": 2
     },
-    "5": {
-      "x": 0,
-      "y": 16,
-      "w": 12,
-      "h": 8
-    },
     "6": {
-      "x": 12,
-      "y": 16,
-      "w": 12,
+      "x": 0,
+      "y": 12,
+      "w": 24,
       "h": 8
     }
   }

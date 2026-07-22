@@ -15,119 +15,272 @@
     }
   ],
   "tiles": {
+    "100": {
+      "type": "markdown",
+      "title": "",
+      "content": "### \ud83c\udf10 External Availability & Synthetic Checks (Currently viewing: **$tenant**)"
+    },
+    "0": {
+      "type": "data",
+      "title": "Seal Status (Unsealed)",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:seal_status\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": false,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "1": {
+      "type": "data",
+      "title": "Endpoint Availability",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:availability\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": false,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "2": {
+      "type": "data",
+      "title": "Auth & Read Capability",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "thresholds": [],
+        "singleValue": {
+          "showLabel": false,
+          "label": "",
+          "prefixIcon": "",
+          "autoscale": true,
+          "alignment": "center",
+          "colorThresholdTarget": "value"
+        }
+      }
+    },
+    "3": {
+      "type": "data",
+      "title": "Latency Trend (Endpoint Availability)",
+      "query": "timeseries avg(dt.synthetic.http.duration), filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:availability\\\")\")))}",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "thresholds": [],
+        "chartSettings": {
+          "gapPolicy": "connect",
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "categoryOverrides": {},
+          "fieldMapping": {
+            "timestamp": "timeframe",
+            "leftAxisValues": [
+              "avg(dt.synthetic.http.duration)"
+            ],
+            "leftAxisDimensions": [],
+            "fields": [],
+            "values": []
+          }
+        }
+      }
+    },
+    "4": {
+      "type": "data",
+      "title": "Global Fleet: Seal Status (All Environments)",
+      "query": "timeseries avg(dt.synthetic.http.availability, scalar:true), by:{dt.entity.http_check}, filter:{in(dt.entity.http_check, classicEntitySelector(\"type(HTTP_CHECK),tag(\\\"service:${service_name}\\\"),tag(\\\"check_type:seal_status\\\")\"))}",
+      "visualization": "honeycomb",
+      "visualizationSettings": {
+        "thresholds": [
+          {
+            "value": 100,
+            "color": "#7dc540"
+          },
+          {
+            "value": 0,
+            "color": "#dc172a"
+          }
+        ],
+        "honeycomb": {
+          "shape": "hexagon",
+          "legend": "hidden",
+          "label": "dimension"
+        }
+      }
+    },
     "101": {
+      "type": "markdown",
+      "title": "",
+      "content": "### \ud83d\udee0\ufe0f Synthetic Diagnostics & Troubleshooting"
+    },
+    "6": {
+      "type": "data",
+      "title": "Authentication vs. Read Latency (Step Breakdown)",
+      "query": "timeseries avg(dt.synthetic.http.request.duration), by:{dt.synthetic.step.id}, filter:{in(dt.entity.http_check, classicEntitySelector(concat(\"type(HTTP_CHECK),tag(\\\"service:vault\\\"),tag(\\\"env:\", $tenant, \"\\\"),tag(\\\"check_type:auth_and_read\\\")\")))}",
+      "visualization": "lineChart",
+      "visualizationSettings": {}
+    },
+    "900101": {
       "type": "markdown",
       "title": "",
       "content": "### \ud83d\udda5\ufe0f Internal Kubernetes Infrastructure (Currently viewing: **$tenant**)"
     },
-    "5": {
+    "9005": {
       "type": "data",
-      "title": "Node CPU Trend",
-      "query": "timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
+      "title": "Node CPU Usage",
+      "query": "timeseries avg(dt.host.cpu.usage), by:{dt.entity.host} | lookup [fetch dt.entity.host], sourceField:dt.entity.host, lookupField:id, fields:{host_name = entity.name} | filter (host_name == \"util\" and $tenant == \"nextresearch\") or (host_name != \"util\" and contains(host_name, $tenant)) | fieldsRemove host_name",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
-    "6": {
+    "9006": {
       "type": "data",
-      "title": "Node Memory Trend",
-      "query": "timeseries avg(dt.host.memory.used), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
+      "title": "Node Memory Usage",
+      "query": "timeseries avg(dt.host.memory.used), by:{dt.entity.host} | lookup [fetch dt.entity.host], sourceField:dt.entity.host, lookupField:id, fields:{host_name = entity.name} | filter (host_name == \"util\" and $tenant == \"nextresearch\") or (host_name != \"util\" and contains(host_name, $tenant)) | fieldsRemove host_name",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
-    "7": {
+    "9007": {
       "type": "data",
-      "title": "Network Traffic (Inbound)",
-      "query": "timeseries sum(dt.host.net.nic.bytes_rx), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
+      "title": "Node Network Traffic Inbound",
+      "query": "timeseries sum(dt.host.net.nic.bytes_rx), by:{dt.entity.host} | lookup [fetch dt.entity.host], sourceField:dt.entity.host, lookupField:id, fields:{host_name = entity.name} | filter (host_name == \"util\" and $tenant == \"nextresearch\") or (host_name != \"util\" and contains(host_name, $tenant)) | fieldsRemove host_name",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
-    "8": {
+    "9008": {
       "type": "data",
-      "title": "Network Traffic (Outbound)",
-      "query": "timeseries sum(dt.host.net.nic.bytes_tx), by:{dt.entity.host}, filter:{in(dt.entity.host, classicEntitySelector(concat(\"type(HOST),tag(\", $tenant, \")\")))}",
+      "title": "Node Network Traffic Outbound",
+      "query": "timeseries sum(dt.host.net.nic.bytes_tx), by:{dt.entity.host} | lookup [fetch dt.entity.host], sourceField:dt.entity.host, lookupField:id, fields:{host_name = entity.name} | filter (host_name == \"util\" and $tenant == \"nextresearch\") or (host_name != \"util\" and contains(host_name, $tenant)) | fieldsRemove host_name",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
-    "9": {
+    "9009": {
       "type": "data",
       "title": "Node Disk Usage",
-      "query": "timeseries avg(dt.host.disk.used), by:{dt.entity.disk}, filter:{in(dt.entity.disk, classicEntitySelector(concat(\"type(DISK),tag(\", $tenant, \")\")))}",
+      "query": "timeseries avg(dt.host.disk.used), by:{dt.entity.host, dt.entity.disk} | lookup [fetch dt.entity.host], sourceField:dt.entity.host, lookupField:id, fields:{host_name = entity.name} | filter (host_name == \"util\" and $tenant == \"nextresearch\") or (host_name != \"util\" and contains(host_name, $tenant)) | fieldsRemove host_name",
       "visualization": "lineChart",
       "visualizationSettings": {}
     },
-    "102": {
+    "900102": {
       "type": "markdown",
       "title": "",
       "content": "### \ud83d\udcdc Vault Application Logs"
     },
-    "10": {
+    "90010": {
       "type": "data",
       "title": "Live Vault Logs (All)",
       "query": "fetch logs | filter matchesPhrase(content, \"vault\") or matchesValue(dt.process.name, \"Go\") | fields timestamp, log.source, dt.process.name, content | sort timestamp desc | limit 50",
       "visualization": "table",
       "visualizationSettings": {}
-    },
-    "11": {
-      "type": "data",
-      "title": "\ud83d\udea8 Vault Errors & Warnings",
-      "query": "fetch logs | filter matchesPhrase(content, \"vault\") and (matchesPhrase(content, \"error\") or matchesPhrase(content, \"warn\")) | fields timestamp, log.source, dt.process.name, content | sort timestamp desc | limit 50",
-      "visualization": "table",
-      "visualizationSettings": {}
     }
   },
   "layouts": {
-    "101": {
+    "100": {
       "x": 0,
       "y": 0,
       "w": 24,
       "h": 2
     },
-    "5": {
+    "0": {
       "x": 0,
       "y": 2,
-      "w": 12,
-      "h": 6
-    },
-    "6": {
-      "x": 12,
-      "y": 2,
-      "w": 12,
-      "h": 6
-    },
-    "7": {
-      "x": 0,
-      "y": 8,
       "w": 8,
-      "h": 6
+      "h": 4
     },
-    "8": {
+    "1": {
       "x": 8,
-      "y": 8,
+      "y": 2,
       "w": 8,
-      "h": 6
+      "h": 4
     },
-    "9": {
+    "2": {
       "x": 16,
-      "y": 8,
+      "y": 2,
       "w": 8,
-      "h": 6
+      "h": 4
     },
-    "102": {
+    "3": {
       "x": 0,
-      "y": 14,
+      "y": 6,
+      "w": 12,
+      "h": 4
+    },
+    "4": {
+      "x": 12,
+      "y": 6,
+      "w": 12,
+      "h": 4
+    },
+    "101": {
+      "x": 0,
+      "y": 10,
       "w": 24,
       "h": 2
     },
-    "10": {
+    "6": {
       "x": 0,
-      "y": 16,
-      "w": 12,
+      "y": 12,
+      "w": 24,
       "h": 8
     },
-    "11": {
-      "x": 12,
-      "y": 16,
+    "900101": {
+      "x": 0,
+      "y": 20,
+      "w": 24,
+      "h": 2
+    },
+    "9005": {
+      "x": 0,
+      "y": 22,
       "w": 12,
+      "h": 4
+    },
+    "9006": {
+      "x": 12,
+      "y": 22,
+      "w": 12,
+      "h": 4
+    },
+    "9007": {
+      "x": 0,
+      "y": 26,
+      "w": 8,
+      "h": 4
+    },
+    "9008": {
+      "x": 8,
+      "y": 26,
+      "w": 8,
+      "h": 4
+    },
+    "9009": {
+      "x": 16,
+      "y": 26,
+      "w": 8,
+      "h": 4
+    },
+    "900102": {
+      "x": 0,
+      "y": 30,
+      "w": 24,
+      "h": 2
+    },
+    "90010": {
+      "x": 0,
+      "y": 32,
+      "w": 24,
       "h": 8
     }
   }
